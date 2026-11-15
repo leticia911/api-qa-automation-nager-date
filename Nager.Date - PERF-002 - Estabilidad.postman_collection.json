@@ -1,0 +1,89 @@
+{
+  "info": {
+    "_postman_id": "c844c2af-91f6-4d42-9b36-06b78e3e8abc",
+    "name": "Nager.Date - PERF-002 - Estabilidad",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "39374140"
+  },
+  "item": [
+    {
+      "name": "PERF-002 - GET Holidays AR 2026",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "\r",
+              "// ==========================================\r",
+              "// PERF-002 - REPETIBILIDAD / ESTABILIDAD\r",
+              "// ==========================================\r",
+              "\r",
+              "// 1. Obtener tiempo de respuesta y umbral\r",
+              "const responseTime = pm.response.responseTime;\r",
+              "const threshold = 2000;\r",
+              "\r",
+              "// 2. Registrar información de la ejecución\r",
+              "const iteration = pm.info.iteration + 1;\r",
+              "\r",
+              "console.log(\"==================================\");\r",
+              "console.log(\"PERF-002 - Repetibilidad / Estabilidad\");\r",
+              "console.log(\"Iteración:\", iteration);\r",
+              "console.log(\"Response time:\", responseTime, \"ms\");\r",
+              "console.log(\"Umbral interno:\", threshold, \"ms\");\r",
+              "console.log(\r",
+              "    \"Hora local:\",\r",
+              "    new Date().toLocaleString(\"es-AR\", {\r",
+              "        timeZone: \"America/Argentina/Cordoba\",\r",
+              "        hour12: false\r",
+              "    })\r",
+              ");\r",
+              "console.log(\"==================================\");\r",
+              "\r",
+              "// 3. Validar código HTTP\r",
+              "pm.test(\"PERF-002 - HTTP status is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "// 4. Validar tiempo de respuesta\r",
+              "pm.test(\"PERF-002 - Response time is below 2000 ms\", function () {\r",
+              "    pm.expect(responseTime).to.be.below(threshold);\r",
+              "});\r",
+              "\r",
+              "// 5. Validar Content-Type\r",
+              "pm.test(\"PERF-002 - Content-Type is JSON\", function () {\r",
+              "    pm.expect(\r",
+              "        pm.response.headers.get(\"Content-Type\")\r",
+              "    ).to.include(\"application/json\");\r",
+              "});\r",
+              "\r",
+              "// 6. Guardar última medición en Environment\r",
+              "pm.environment.set(\"lastResponseTime\", String(responseTime));\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v4/Holidays/{{countryCode}}/{{year}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v4",
+            "Holidays",
+            "{{countryCode}}",
+            "{{year}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
